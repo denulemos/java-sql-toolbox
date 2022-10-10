@@ -26,7 +26,7 @@ public class Main {
                 queryDatabase.runInsertOrUpdateQuery(currentConnection, "update employees set email='denolemon@google.com where last_name='Lemon'");
                 queryDatabase.runSelectQuery(currentConnection, "select * from employees");
 
-                // We delete Deno Lemon registry
+                // We delete Deno Registry
                 queryDatabase.runInsertOrUpdateQuery(currentConnection, "delete from employees set email='denolemon@google.com where last_name='Lemon'");
                 queryDatabase.runSelectQuery(currentConnection, "select * from employees");
             }
