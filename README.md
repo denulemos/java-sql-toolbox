@@ -38,3 +38,7 @@ INSERT INTO `employees` (`id`,`last_name`,`first_name`,`email`, `department`, `s
 ```
 
 (In order for you to use my Database, you will need to create an user in MySQL called student, with the same password)
+
+### Take note!
+
+The MySQL Connection tool is added to this project, is the .jar file, you will probably need to import it as a library to the project :) (Downloaded on October 2022)
