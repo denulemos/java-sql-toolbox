@@ -1,8 +1,5 @@
-import java.sql.Connection;
-import java.sql.SQLException;
-
 public class Main {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
         String testUrl = "jdbc:mysql://localhost:3306/demo?useSSL=false";
         String testUser = "student";
         String testPassword = "student";
@@ -10,7 +7,7 @@ public class Main {
             ConnectDatabase connectDatabase = new ConnectDatabase();
 
             connectDatabase.ConnectToDatabase(testUrl, testUser, testPassword);
-            if (connectDatabase.currentConnection != null) {
+            if (ConnectDatabase.currentConnection != null) {
                 // Init the query class after we know that we have a Database already connected and running
                 QueryDatabase queryDatabase = new QueryDatabase();
 
@@ -23,7 +20,7 @@ public class Main {
                 queryDatabase.runSelectQuery("select * from employees");
 
                 // We update Deno Lemon registry
-                queryDatabase.runInsertOrUpdateQuery( "update employees set email='denolemon@google.com where last_name='Lemon'");
+                queryDatabase.runInsertOrUpdateQuery( "update employees set email='denolemon@google.com' where last_name='Lemon'");
                 queryDatabase.runSelectQuery( "select * from employees");
 
                 // We delete Deno Registry
@@ -32,6 +29,12 @@ public class Main {
 
                 // We run the prepared Statement
                 queryDatabase.preparedStatements(1000.0, "HR");
+
+                // We run the Store procedures
+                StoreProcedures storeProcedures = new StoreProcedures();
+                storeProcedures.callGreetTheDepartmentSP("Engineering");
+                storeProcedures.callGetCountForDepartment("Engineering");
+                storeProcedures.callIncreaseSalariesForDepartmentSP("Engineering", 1000.0);
             }
         }
        catch (Exception e) {
