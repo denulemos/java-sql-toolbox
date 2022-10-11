@@ -9,30 +9,33 @@ public class Main {
         try {
             ConnectDatabase connectDatabase = new ConnectDatabase();
 
-            Connection currentConnection = connectDatabase.ConnectToDatabase(testUrl, testUser, testPassword);
-            if (currentConnection != null) {
+            connectDatabase.ConnectToDatabase(testUrl, testUser, testPassword);
+            if (connectDatabase.currentConnection != null) {
                 // Init the query class after we know that we have a Database already connected and running
                 QueryDatabase queryDatabase = new QueryDatabase();
 
                 // We run Query against Database
-                queryDatabase.runSelectQuery(currentConnection, "select * from employees");
+                queryDatabase.runSelectQuery("select * from employees");
 
                 // We insert new registry
-                queryDatabase.runInsertOrUpdateQuery(currentConnection, "insert into employees (last_name, first_name, email, department, salary)"
+                queryDatabase.runInsertOrUpdateQuery("insert into employees (last_name, first_name, email, department, salary)"
                        + "values ('Lemon', 'Denu', 'denulemon@empresa.com', 'Developer', 10000 )");
-                queryDatabase.runSelectQuery(currentConnection, "select * from employees");
+                queryDatabase.runSelectQuery("select * from employees");
 
                 // We update Deno Lemon registry
-                queryDatabase.runInsertOrUpdateQuery(currentConnection, "update employees set email='denolemon@google.com where last_name='Lemon'");
-                queryDatabase.runSelectQuery(currentConnection, "select * from employees");
+                queryDatabase.runInsertOrUpdateQuery( "update employees set email='denolemon@google.com where last_name='Lemon'");
+                queryDatabase.runSelectQuery( "select * from employees");
 
                 // We delete Deno Registry
-                queryDatabase.runInsertOrUpdateQuery(currentConnection, "delete from employees set email='denolemon@google.com where last_name='Lemon'");
-                queryDatabase.runSelectQuery(currentConnection, "select * from employees");
+                queryDatabase.runInsertOrUpdateQuery( "delete from employees where last_name='Lemon'");
+                queryDatabase.runSelectQuery( "select * from employees");
+
+                // We run the prepared Statement
+                queryDatabase.preparedStatements(1000.0, "HR");
             }
         }
        catch (Exception e) {
-           System.out.println("The execute ended due to an error");
+           System.out.println("The execute ended due to an error: " + e);
        }
     }
 }

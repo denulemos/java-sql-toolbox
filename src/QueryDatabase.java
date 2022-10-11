@@ -1,11 +1,15 @@
+import Exceptions.FailedPreparedStatementException;
+import Exceptions.FailedSelectQueryException;
+import Exceptions.FailedUpdateException;
+
 import java.sql.*;
 
 public class QueryDatabase {
 
-    public void runSelectQuery (Connection myConn, String query) throws SQLException {
-
+    public void runSelectQuery (String query) throws  FailedSelectQueryException {
+        System.out.println("Running Select Query...");
         try {
-            Statement myStatement = myConn.createStatement();
+            Statement myStatement = ConnectDatabase.currentConnection.createStatement();
             ResultSet myResultSet = myStatement.executeQuery(query);
             ResultSetMetaData rsmd = myResultSet.getMetaData();
             int columnsNumber = rsmd.getColumnCount();
@@ -18,22 +22,37 @@ public class QueryDatabase {
                 System.out.println("");
             }
         }
-        catch (SQLException e) {
-            System.out.println("There was an error trying to run a Select against the DB: " + e);
+        catch (Exception e) {
+            throw new FailedSelectQueryException("There was an error trying to run the Select query on the Database");
         }
 
     }
 
-    // It can Insert and Update
-    public void runInsertOrUpdateQuery (Connection myConn, String query) throws SQLException {
-
+    // It can Insert, Update and Delete, it shows the amount of rows affected
+    public void runInsertOrUpdateQuery (String query) throws  FailedUpdateException {
+        System.out.println("Running Update Query...");
         try {
-            Statement myStatement = myConn.createStatement();
-            int myResultSet = myStatement.executeUpdate(query);
-            System.out.println("Rows affected " + myResultSet);
+            Statement myStatement = ConnectDatabase.currentConnection.createStatement();
+            System.out.println("Rows affected " + myStatement.executeUpdate(query));
         }
-        catch (SQLException e) {
-            System.out.println("There was an error trying to Update or Insert to the DB:  " + e);
+        catch (Exception e) {
+            throw new FailedUpdateException("There was an error trying to run the following query on the DB: " + query);
+        }
+
+    }
+
+    // This only works with the Employee table structure, make sure to adapt it to your own table if necessary
+    public void preparedStatements (Double salary, String department) throws FailedPreparedStatementException {
+        System.out.println("Running Prepared Query...");
+        try {
+            PreparedStatement queryToRun = ConnectDatabase.currentConnection.prepareStatement("select * from employees where salary > ? and department = ?");
+            queryToRun.setDouble(1, salary);
+            queryToRun.setString(2, department);
+
+            ResultSet result = queryToRun.executeQuery();
+            System.out.println(result);
+        } catch (Exception e) {
+            throw new FailedPreparedStatementException("There was an error trying to run the prepared Statement");
         }
 
     }
